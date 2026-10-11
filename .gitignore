@@ -2,7 +2,7 @@
 src/*.exe
 
 # Generated compression and reconstruction outputs
-src/output/
+/output/
 
 # Python cache
 __pycache__/

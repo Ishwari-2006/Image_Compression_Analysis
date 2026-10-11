@@ -17,9 +17,9 @@ threads = [int(t) for t in (sys.argv[2] if len(sys.argv) > 2 else "1,2,4,8").spl
 reps = sys.argv[3] if len(sys.argv) > 3 else "5"
 exe = ".exe" if sys.platform.startswith("win") or (root / "sequential_single.exe").exists() else ""
 seq_exe, par_exe = str(root / f"sequential_single{exe}"), str(root / f"parallel_single{exe}")
-src_csv = root / "results" / "single_results.csv"
-out = root / "output" / "single"
-dst_csv = root / "results" / "batch_results.csv"
+src_csv = root.parent / "results" / "single_results.csv"
+out = root.parent / "output" / "single"
+dst_csv = root.parent / "results" / "batch_results.csv"
 
 imgs = sorted(p for p in folder.iterdir() if p.suffix.lower() in {".jpg", ".jpeg", ".png", ".bmp"})
 if not imgs:

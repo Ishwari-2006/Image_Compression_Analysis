@@ -192,6 +192,14 @@ Image_Compression_Analysis-main/
 │   ├── img_1000x667.jpg
 │   ├── img_2000x1333.jpg
 │   └── img_3000x2000.jpg
+├── results/
+│   ├── single_results.csv
+│   ├── batch_results.csv
+│   ├── scaling_size.csv
+│   └── scaling_collection.csv
+├── graphs/
+├── output/
+│   └── single/
 └── src/
     ├── codec_common.h
     ├── sequential_single.cpp
@@ -202,13 +210,7 @@ Image_Compression_Analysis-main/
     ├── generate_graphs.py
     ├── stb_image.h
     ├── stb_image_write.h
-    ├── README_single.md
-    ├── results/
-    │   ├── single_results.csv
-    │   ├── batch_results.csv
-    │   ├── scaling_size.csv
-    │   └── scaling_collection.csv
-    └── graphs/
+    └── README_single.md
 ```
 
 ### Main files
@@ -223,8 +225,8 @@ Image_Compression_Analysis-main/
 | `src/verify_single.py` | Compares compressed outputs and reconstructed PNG files, then prints stage speedups and efficiency |
 | `src/generate_graphs.py` | Generates timing, speedup, compression-ratio, PSNR, and SSIM plots |
 | `src/stb_image.h` / `src/stb_image_write.h` | Header-only image reading and PNG writing dependencies |
-| `src/results/*.csv` | Saved experimental output; values depend on the run and machine |
-| `src/graphs/*.png` | Generated charts |
+| `results/*.csv` | Saved experimental output; values depend on the run and machine |
+| `graphs/*.png` | Generated charts |
 
 ## 6. Technology Stack
 
@@ -288,7 +290,7 @@ cd "/c/Users/<YOUR_WINDOWS_USERNAME>/Downloads/Image_Compression_Analysis-main/s
 
 Replace the example path with the actual path on your computer.
 
-**Run the programs and scripts from `src/`.** The C++ programs write to relative paths such as `output/single/` and `results/`, and the scripts expect those folders under `src/`.
+**Run the programs and scripts from `src/`.** The C++ programs write compressed files and reconstructed images to `../output/single/` and CSV data to `../results/`; the experiment scripts read and write CSV files under `../results/` and charts under `../graphs/`.
 
 ### Step 3 — Install Python packages
 
@@ -351,14 +353,14 @@ The parallel program's second argument is the requested OpenMP thread count. `1`
 
 The program creates or updates:
 
-- `src/output/single/sequential.bin`
-- `src/output/single/sequential_reconstructed.png`
-- `src/output/single/parallel_t1.bin`
-- `src/output/single/parallel_t1_reconstructed.png`
+- `../output/single/sequential.bin`
+- `../output/single/sequential_reconstructed.png`
+- `../output/single/parallel_t1.bin`
+- `../output/single/parallel_t1_reconstructed.png`
 - Equivalent `parallel_tN` files for each tested thread count.
-- `src/results/single_results.csv`
+- `../results/single_results.csv`
 
-Each new run writes the named `.bin` and `.png` outputs again and **appends** a row to `single_results.csv`. Keep that behavior in mind when comparing historical rows.
+Paths above are relative to `src/`, where the programs are run. The output folder itself is at the project root, alongside `results/` and `graphs/`. Each new run overwrites the named `.bin` and `.png` outputs and **appends** a row to `../results/single_results.csv`. Keep that behavior in mind when comparing historical rows.
 
 ## 11. Run the Batch Experiment
 
@@ -381,7 +383,7 @@ If arguments are omitted, the script defaults to `image_dataset`, thread counts 
 The script writes:
 
 ```text
-src/results/batch_results.csv
+../results/batch_results.csv
 ```
 
 It also prints a compact summary including dimensions, compression ratio, PSNR, SSIM, and compression/decompression speedups.
@@ -400,9 +402,9 @@ python run_scaling.py
 
 The script expects `sequential_single.exe` and `parallel_single.exe` to exist in `src/`. It writes:
 
-- `src/scaling_images/` — resized image inputs.
-- `src/results/scaling_size.csv` — per-size timing rows.
-- `src/results/scaling_collection.csv` — sums derived from the existing batch results.
+- `../scaling_images/` — resized image inputs.
+- `../results/scaling_size.csv` — per-size timing rows.
+- `../results/scaling_collection.csv` — sums derived from the existing batch results.
 
 ### Important interpretation of collection-size scaling
 
@@ -443,7 +445,7 @@ First ensure `batch_results.csv` contains the benchmark run you want to present.
 python generate_graphs.py
 ```
 
-The script reads `results/batch_results.csv` and writes PNG charts under `src/graphs/`:
+The script reads `../results/batch_results.csv` and writes PNG charts under `../graphs/`:
 
 - `compression_time.png`
 - `decompression_time.png`
@@ -452,6 +454,7 @@ The script reads `results/batch_results.csv` and writes PNG charts under `src/gr
 - `compression_ratio.png`
 - `psnr.png`
 - `ssim.png`
+
 
 ### Graph-generation note
 

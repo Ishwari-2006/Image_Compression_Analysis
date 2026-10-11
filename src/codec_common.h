@@ -665,11 +665,11 @@ inline int finish_run(const std::string& mode, int threads, const std::string& i
                        const DTimings& dmean, double dbest,
                        int reps, double tRead)
 {
-    fs::create_directories("output/single");
-    fs::create_directories("results");
+    fs::create_directories("../output/single");
+    fs::create_directories("../results");
     std::string tag = (mode == "sequential") ? "sequential" : "parallel_t" + std::to_string(threads);
-    std::string binPath = "output/single/" + tag + ".bin";
-    std::string pngPath = "output/single/" + tag + "_reconstructed.png";
+    std::string binPath = "../output/single/" + tag + ".bin";
+    std::string pngPath = "../output/single/" + tag + "_reconstructed.png";
     { std::ofstream o(binPath, std::ios::binary); o.write((const char*)file.data(), (std::streamsize)file.size()); }
 
     bool lossless = decodeOk && dec.c[0] == enc.c[0] && dec.c[1] == enc.c[1] && dec.c[2] == enc.c[2];
@@ -709,8 +709,8 @@ inline int finish_run(const std::string& mode, int threads, const std::string& i
     std::cout << "Bitstream checksum (FNV-1a) : " << std::hex << sum << std::dec << "\n";
     std::cout << "Saved: " << binPath << " , " << pngPath << "\n";
 
-    bool fresh = !fs::exists("results/single_results.csv");
-    std::ofstream csv("results/single_results.csv", std::ios::app);
+    bool fresh = !fs::exists("../results/single_results.csv");
+    std::ofstream csv("../results/single_results.csv", std::ios::app);
     if (fresh)
         csv << "Mode,Threads,Image,Width,Height,Reps,Read_ms,Color_ms,DCT_Quant_ms,Hist_ms,Huffman_ms,"
                "Encode_ms,Merge_ms,Total_mean_ms,Total_best_ms,Compressed_bytes,Ratio,MSE,PSNR_dB,SSIM,"

@@ -2,9 +2,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-Path("graphs").mkdir(exist_ok=True)
+graphs = Path(__file__).resolve().parent.parent / "graphs"
+graphs.mkdir(exist_ok=True)
 
-df = pd.read_csv("results/batch_results.csv")
+df = pd.read_csv(Path(__file__).resolve().parent.parent / "results" / "batch_results.csv")
 
 land = df[df["Image"] == "01_landscape.jpg"]
 seq = land[land["Mode"] == "sequential"]
@@ -19,7 +20,7 @@ plt.ylabel("Time (ms)")
 plt.title("Compression Time vs Threads")
 plt.grid(True)
 plt.tight_layout()
-plt.savefig("graphs/compression_time.png", dpi=300)
+plt.savefig(graphs / "compression_time.png", dpi=300)
 plt.close()
 
 # Decompression Time
@@ -31,7 +32,7 @@ plt.ylabel("Time (ms)")
 plt.title("Decompression Time vs Threads")
 plt.grid(True)
 plt.tight_layout()
-plt.savefig("graphs/decompression_time.png", dpi=300)
+plt.savefig(graphs / "decompression_time.png", dpi=300)
 plt.close()
 
 # Compression Speedup
@@ -54,7 +55,7 @@ plt.title("Compression Speedup")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
-plt.savefig("graphs/compression_speedup.png", dpi=300)
+plt.savefig(graphs / "compression_speedup.png", dpi=300)
 plt.close()
 
 # Decompression Speedup
@@ -77,7 +78,7 @@ plt.title("Decompression Speedup")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
-plt.savefig("graphs/decompression_speedup.png", dpi=300)
+plt.savefig(graphs / "decompression_speedup.png", dpi=300)
 plt.close()
 
 # Compression Ratio
@@ -93,7 +94,7 @@ plt.ylabel("Compression Ratio")
 plt.title("Compression Ratio Across Images")
 plt.xticks(rotation=45, ha="right")
 plt.tight_layout()
-plt.savefig("graphs/compression_ratio.png", dpi=300)
+plt.savefig(graphs / "compression_ratio.png", dpi=300)
 plt.close()
 
 # PSNR
@@ -104,7 +105,7 @@ plt.ylabel("PSNR (dB)")
 plt.title("PSNR Across Images")
 plt.xticks(rotation=45, ha="right")
 plt.tight_layout()
-plt.savefig("graphs/psnr.png", dpi=300)
+plt.savefig(graphs / "psnr.png", dpi=300)
 plt.close()
 
 # SSIM
@@ -115,11 +116,11 @@ plt.ylabel("SSIM")
 plt.title("SSIM Across Images")
 plt.xticks(rotation=45, ha="right")
 plt.tight_layout()
-plt.savefig("graphs/ssim.png", dpi=300)
+plt.savefig(graphs / "ssim.png", dpi=300)
 plt.close()
 
 print("GRAPH GENERATION COMPLETE")
-print("Graphs saved in graphs/")
+print(f"Graphs saved in {graphs}/")
 
-for f in sorted(Path("graphs").glob("*.png")):
+for f in sorted(graphs.glob("*.png")):
     print(f.name)

@@ -5,7 +5,7 @@ from PIL import Image
 root = Path(__file__).resolve().parent
 src_img = root.parent / "image_dataset" / "01_landscape.jpg"
 tmp = root.parent / "scaling_images"; tmp.mkdir(exist_ok=True)
-res = root / "results"
+res = root.parent / "results"
 sizes = [(500,333),(1000,667),(2000,1333),(3000,2000)]
 threads = [4, 8, 12]
 reps = "5"

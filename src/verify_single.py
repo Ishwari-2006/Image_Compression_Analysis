@@ -2,7 +2,7 @@
 verify_single.py  -  correctness check + per-stage speedup table for the
 single-image experiment.
 
-Usage:  python verify_single.py            (run from the folder that contains output/ and results/)
+Usage:  python verify_single.py            (run from src/, with output/ and results/ at the project root)
 
 1. CORRECTNESS: the compressed file and the reconstructed image produced by every
    parallel run must be byte-for-byte identical to the sequential ones.
@@ -13,13 +13,13 @@ import csv, sys
 from pathlib import Path
 
 root = Path(__file__).resolve().parent
-out = root / "output" / "single"
-csv_path = root / "results" / "single_results.csv"
+out = root.parent / "output" / "single"
+csv_path = root.parent / "results" / "single_results.csv"
 
 seq_bin = out / "sequential.bin"
 seq_png = out / "sequential_reconstructed.png"
 if not seq_bin.exists():
-    print("ERROR: run sequential_single first (output/single/sequential.bin missing)")
+    print("ERROR: run sequential_single first (../output/single/sequential.bin missing)")
     sys.exit(1)
 
 print("=" * 60)
