@@ -16,26 +16,34 @@ root = Path(__file__).resolve().parent
 out = root.parent / "output" / "single"
 csv_path = root.parent / "results" / "single_results.csv"
 
-seq_bin = out / "sequential.bin"
-seq_png = out / "sequential_reconstructed.png"
+rows = list(csv.DictReader(open(csv_path, newline=""))) if csv_path.exists() else []
+seq_rows = [r for r in rows if r["Mode"] == "sequential"]
+if not seq_rows:
+    print("ERROR: run sequential_single first (no sequential run found in single_results.csv)")
+    sys.exit(1)
+image_stem = Path(seq_rows[-1]["Image"]).stem
+image_rows = [r for r in rows if Path(r["Image"]).stem == image_stem]
+seq_bin = out / f"{image_stem}_sequential.bin"
+seq_png = out / f"{image_stem}_sequential_reconstructed.png"
 if not seq_bin.exists():
-    print("ERROR: run sequential_single first (../output/single/sequential.bin missing)")
+    print(f"ERROR: sequential output for {image_stem} is missing ({seq_bin})")
     sys.exit(1)
 
 print("=" * 60)
 print("CORRECTNESS  (parallel vs sequential)")
 print("=" * 60)
 all_ok = True
-for pb in sorted(out.glob("parallel_t*.bin"), key=lambda p: int(p.stem.split("_t")[1])):
-    t = pb.stem.split("_t")[1]
+parallel_pattern = f"{image_stem}_parallel_t*.bin"
+for pb in sorted(out.glob(parallel_pattern), key=lambda p: int(p.stem.rsplit("_t", 1)[1])):
+    t = pb.stem.rsplit("_t", 1)[1]
     same_bin = pb.read_bytes() == seq_bin.read_bytes()
-    pp = out / f"parallel_t{t}_reconstructed.png"
+    pp = out / f"{image_stem}_parallel_t{t}_reconstructed.png"
     same_png = pp.exists() and seq_png.exists() and pp.read_bytes() == seq_png.read_bytes()
     ok = same_bin and same_png
     all_ok &= ok
     print(f"  threads={t:>2}  compressed file identical: {same_bin!s:5}  "
           f"reconstructed image identical: {same_png!s:5}  -> {'PASS' if ok else 'FAIL'}")
-parallel_outputs = list(out.glob("parallel_t*.bin"))
+parallel_outputs = list(out.glob(parallel_pattern))
 if not parallel_outputs:
     print("  (no parallel output found - run parallel_single first)")
     all_ok = False
@@ -44,10 +52,9 @@ print("OVERALL:", "PASS" if all_ok else "FAIL")
 if not csv_path.exists():
     sys.exit(0 if all_ok else 1)
 
-rows = list(csv.DictReader(open(csv_path, newline="")))
-seq = [r for r in rows if r["Mode"] == "sequential"]
+seq = [r for r in image_rows if r["Mode"] == "sequential"]
 par = {}
-for r in rows:
+for r in image_rows:
     if r["Mode"] == "parallel":
         par[int(r["Threads"])] = r          # last run per thread count wins
 if not seq or not par:

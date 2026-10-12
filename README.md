@@ -353,14 +353,14 @@ The parallel program's second argument is the requested OpenMP thread count. `1`
 
 The program creates or updates:
 
-- `../output/single/sequential.bin`
-- `../output/single/sequential_reconstructed.png`
-- `../output/single/parallel_t1.bin`
-- `../output/single/parallel_t1_reconstructed.png`
-- Equivalent `parallel_tN` files for each tested thread count.
+- `../output/single/01_landscape_sequential.bin`
+- `../output/single/01_landscape_sequential_reconstructed.png`
+- `../output/single/01_landscape_parallel_t1.bin`
+- `../output/single/01_landscape_parallel_t1_reconstructed.png`
+- Equivalent `01_landscape_parallel_tN` files for each tested thread count.
 - `../results/single_results.csv`
 
-Paths above are relative to `src/`, where the programs are run. The output folder itself is at the project root, alongside `results/` and `graphs/`. Each new run overwrites the named `.bin` and `.png` outputs and **appends** a row to `../results/single_results.csv`. Keep that behavior in mind when comparing historical rows.
+The output filenames use the input image's name (without its extension), followed by the mode and thread count. For example, the image `01_landscape.jpg` creates `01_landscape_sequential.bin` and `01_landscape_parallel_t1.bin`, along with matching reconstructed PNGs. Paths above are relative to `src/`, where the programs are run. The output folder itself is at the project root, alongside `results/` and `graphs/`. Re-running the same image and mode overwrites those outputs and **appends** a row to `../results/single_results.csv`; different image names retain separate files.
 
 ## 11. Run the Batch Experiment
 

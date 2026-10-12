@@ -668,8 +668,9 @@ inline int finish_run(const std::string& mode, int threads, const std::string& i
     fs::create_directories("../output/single");
     fs::create_directories("../results");
     std::string tag = (mode == "sequential") ? "sequential" : "parallel_t" + std::to_string(threads);
-    std::string binPath = "../output/single/" + tag + ".bin";
-    std::string pngPath = "../output/single/" + tag + "_reconstructed.png";
+    std::string outputTag = fs::path(imagePath).stem().string() + "_" + tag;
+    std::string binPath = "../output/single/" + outputTag + ".bin";
+    std::string pngPath = "../output/single/" + outputTag + "_reconstructed.png";
     { std::ofstream o(binPath, std::ios::binary); o.write((const char*)file.data(), (std::streamsize)file.size()); }
 
     bool lossless = decodeOk && dec.c[0] == enc.c[0] && dec.c[1] == enc.c[1] && dec.c[2] == enc.c[2];

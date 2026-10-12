@@ -36,15 +36,16 @@ for img in imgs:
     print(f"\n### {img.name}")
     subprocess.run([seq_exe, str(img), reps], check=True, stdout=subprocess.DEVNULL)
     s = norm(last_row())
-    seq_bin = (out / "sequential.bin").read_bytes()
-    seq_png = (out / "sequential_reconstructed.png").read_bytes()
+    output_tag = img.stem
+    seq_bin = (out / f"{output_tag}_sequential.bin").read_bytes()
+    seq_png = (out / f"{output_tag}_sequential_reconstructed.png").read_bytes()
     s["Correct"] = "baseline"
     rows.append(s)
     for t in threads:
         subprocess.run([par_exe, str(img), str(t), reps], check=True, stdout=subprocess.DEVNULL)
         p = norm(last_row())
-        ok = ((out / f"parallel_t{t}.bin").read_bytes() == seq_bin and
-              (out / f"parallel_t{t}_reconstructed.png").read_bytes() == seq_png)
+        ok = ((out / f"{output_tag}_parallel_t{t}.bin").read_bytes() == seq_bin and
+              (out / f"{output_tag}_parallel_t{t}_reconstructed.png").read_bytes() == seq_png)
         p["Correct"] = "PASS" if ok else "FAIL"
         rows.append(p)
         print(f"  t={t:<2} comp {float(p['Total_mean_ms']):8.2f} ms  "
